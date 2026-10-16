@@ -1,0 +1,367 @@
+:root {
+  color-scheme: dark;
+  --ink: #f4f0e6;
+  --muted: #a9a69d;
+  --panel: #151925;
+  --line: rgba(255, 255, 255, 0.12);
+  --acid: #d8ff5e;
+  --orange: #ff6b35;
+  --night: #0c0f18;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  display: grid;
+  place-items: center;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 75% 15%, rgba(255, 107, 53, 0.1), transparent 28rem),
+    linear-gradient(135deg, #090b11, #10131e 55%, #0b0d14);
+  color: var(--ink);
+  font-family: "Arial Narrow", "Malgun Gothic", system-ui, sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.13'/%3E%3C/svg%3E");
+}
+
+button {
+  font: inherit;
+}
+
+.game-shell {
+  width: min(1180px, calc(100vw - 40px));
+  margin: 24px auto;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(13, 16, 25, 0.82);
+  box-shadow: 0 35px 100px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(18px);
+}
+
+.topbar,
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 82px;
+  padding: 0 32px;
+  border-color: var(--line);
+}
+
+.topbar {
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+}
+
+.brand-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid rgba(216, 255, 94, 0.55);
+  border-radius: 8px;
+  color: var(--night);
+  background: var(--acid);
+  font-size: 19px;
+  font-style: italic;
+  box-shadow: 0 0 24px rgba(216, 255, 94, 0.25);
+}
+
+.scoreboard {
+  display: flex;
+  gap: 36px;
+  font-family: "Courier New", monospace;
+}
+
+.scoreboard span {
+  display: grid;
+  grid-template-columns: auto;
+  text-align: right;
+}
+
+.scoreboard small {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+}
+
+.scoreboard strong {
+  margin-top: 2px;
+  font-size: 20px;
+  letter-spacing: 0.06em;
+}
+
+.game-stage {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1080 / 520;
+  min-height: 360px;
+  background: #efeadf;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: manipulation;
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.16;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0,
+    transparent 3px,
+    rgba(24, 30, 38, 0.16) 4px
+  );
+  mix-blend-mode: multiply;
+}
+
+.start-panel,
+.game-over-panel {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: clamp(30px, 7vw, 92px);
+  transform: translateY(-50%);
+}
+
+.start-panel[hidden],
+.game-over-panel[hidden] {
+  display: none;
+}
+
+.eyebrow {
+  margin: 0 0 14px;
+  color: #2e3540;
+  font: 800 11px/1 "Courier New", monospace;
+  letter-spacing: 0.22em;
+}
+
+h1,
+h2 {
+  margin: 0;
+  color: #171b23;
+  font-size: clamp(52px, 7vw, 92px);
+  font-weight: 950;
+  line-height: 0.82;
+  letter-spacing: -0.075em;
+  text-transform: uppercase;
+}
+
+h1 em {
+  color: var(--orange);
+  font-style: normal;
+}
+
+.intro,
+.game-over-panel > p:not(.eyebrow) {
+  margin: 24px 0 28px;
+  color: #525760;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.65;
+}
+
+.game-over-panel h2 {
+  font-size: clamp(58px, 8vw, 104px);
+}
+
+.game-over-panel > p:not(.eyebrow) {
+  margin: 16px 0 24px;
+  font-size: 18px;
+}
+
+#final-score {
+  color: #111722;
+  font-family: "Courier New", monospace;
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 52px;
+  padding: 0 12px 0 22px;
+  border: 0;
+  border-radius: 9px;
+  color: var(--night);
+  background: var(--acid);
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(77, 92, 26, 0.18);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(77, 92, 26, 0.25);
+}
+
+.primary-button:active {
+  transform: translateY(0);
+}
+
+kbd {
+  display: inline-grid;
+  min-width: 30px;
+  height: 27px;
+  place-items: center;
+  padding: 0 7px;
+  border: 1px solid currentColor;
+  border-radius: 5px;
+  box-shadow: none;
+  font: 700 10px/1 "Courier New", monospace;
+}
+
+.primary-button kbd {
+  min-width: 50px;
+  border-color: rgba(12, 15, 24, 0.35);
+}
+
+.sound-button {
+  position: absolute;
+  z-index: 4;
+  top: 24px;
+  right: 28px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid rgba(26, 31, 40, 0.18);
+  border-radius: 50%;
+  color: #222831;
+  background: rgba(255, 255, 255, 0.48);
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.controls {
+  justify-content: flex-start;
+  gap: 30px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.controls p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.controls kbd {
+  color: var(--ink);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.controls .status {
+  margin-left: auto;
+  color: #858a85;
+  font: 700 10px/1 "Courier New", monospace;
+}
+
+.status i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 12px var(--acid);
+}
+
+.touch-hint {
+  display: none !important;
+}
+
+@media (max-width: 720px) {
+  .game-shell {
+    width: calc(100vw - 20px);
+    margin: 10px auto;
+    border-radius: 18px;
+  }
+
+  .topbar,
+  .controls {
+    min-height: 68px;
+    padding: 0 18px;
+  }
+
+  .scoreboard {
+    gap: 18px;
+  }
+
+  .scoreboard strong {
+    font-size: 16px;
+  }
+
+  .game-stage {
+    aspect-ratio: 3 / 4;
+    min-height: 520px;
+  }
+
+  .start-panel,
+  .game-over-panel {
+    top: 45%;
+    left: 28px;
+  }
+
+  h1 {
+    font-size: clamp(50px, 16vw, 72px);
+  }
+
+  .intro {
+    margin: 18px 0 24px;
+  }
+
+  .controls > p:not(.touch-hint):not(.status) {
+    display: none;
+  }
+
+  .touch-hint {
+    display: flex !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
